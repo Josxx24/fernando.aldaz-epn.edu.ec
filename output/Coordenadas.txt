@@ -1,0 +1,11 @@
+Cap	Geo	Arsenal
+0	GPS0	aaabbcd
+0	GPS0	acd
+0	GPS0	acd
+3	GPS3	bct
+2	GPS2	bcd
+6	GPS6	act
+6	GPS6	bcd
+2	GPS2	ab
+7	GPS7	bc
+1	GPS1	bc
