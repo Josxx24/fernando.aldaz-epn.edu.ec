@@ -1,11 +1,11 @@
 Error: Cap	Geo	Arsenal --> stoi
-0	GPS0	aaabbcd
-0	GPS0	acd
-0	GPS0	acd
-3	GPS3	bct
-2	GPS2	bcd
+0	GPS0	ab
+0	GPS0	ab
+0	GPS0	ab
+3	GPS3	bcd
+2	GPS2	ac
 6	GPS6	act
-6	GPS6	bcd
-2	GPS2	ab
-7	GPS7	bc
+6	GPS6	act
+2	GPS2	ac
+7	GPS7	aaabbct
 1	GPS1	bc

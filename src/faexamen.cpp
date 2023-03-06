@@ -3,16 +3,17 @@
 #include <cctype>
 #include <fstream>
 #include <stdlib.h>
-#include <windows.h>
+#include "..\lib\FaColores.h"
 
 using namespace std;
 
 string FANOMBRE = "Fernando Josue Aldaz Lascano";
 int FACEDULA = 1726623000;
-int FACAPACIDADBELICA =27;
+int FACAPACIDADBELICA =19;
 int FACOORDENADATOTAL = 10;
+string FAENORDEN = "0 1 2 3 6 7 ";
 
-enum class faEstado {INICIO, Q1, Q2, ARMAMENTOCOMPLETO,FAIL};
+enum class faEstado {INICIO, Q1, Q2,Q3, ARMAMENTOCOMPLETO,FAIL};
 
 struct faCoordenada
 {
@@ -29,24 +30,24 @@ struct faNodo{
 
 typedef struct faNodo *ABB;
 
-ABB faCrearNodo(faCoordenada x)
+ABB faCrearNodo(int x)
 {
      ABB nuevoNodo = new(struct faNodo);
-     nuevoNodo->fanro = x.faCap;
+     nuevoNodo->fanro = x;
      nuevoNodo->faizq = NULL;
      nuevoNodo->fader = NULL;
 
      return nuevoNodo;
 }
-void insertar(ABB &faarbol, faCoordenada x)
+void insertar(ABB &faarbol, int x)
 {
      if(faarbol==NULL)
      {
           faarbol = faCrearNodo(x);
      }
-     else if(x.faCap > faarbol->fanro)
+     else if(x > faarbol->fanro)
           insertar(faarbol->faizq, x);
-     else if(x.faCap < faarbol->fanro)
+     else if(x < faarbol->fanro)
           insertar(faarbol->fader, x);
 }
 void faVerArbol(ABB faarbol, int fan)
@@ -81,16 +82,19 @@ faEstado faArmamentoBomba(string fapalabra){
      {
           if (faActual==faEstado::INICIO)
           {
-               if (fapalabra[0]=='T')
+               if (fapalabra[i]=='a')
                {
                     faActual=faEstado::Q1;
                }
-               if (faActual==faEstado::Q1 && fapalabra[1]=='D')
+               if (faActual==faEstado::Q1 && fapalabra[i]=='b')
                {
                     faActual=faEstado::Q2;
                }
-               if (faActual==faEstado::Q2 && fapalabra[2]=='A')
+               if (faActual==faEstado::Q2 && fapalabra[i]=='c' || faActual==faEstado::Q2)
                {
+                    faActual=faEstado::Q3;
+               }
+               if(faActual==faEstado::Q3 && fapalabra[i]=='d' || faActual==faEstado::Q3){
                     faActual=faEstado::ARMAMENTOCOMPLETO;
                }else{
                     faActual=faEstado::FAIL;
@@ -101,19 +105,17 @@ faEstado faArmamentoBomba(string fapalabra){
 }
 
 void faEscribir(){
-    faCoordenada fa1={0,"GPS0","aaabbcd"};
-    faCoordenada fa2={0,"GPS0","acd"};
-    faCoordenada fa3={0,"GPS0","acd"};
-    faCoordenada fa4={3,"GPS3","bct"};
-    faCoordenada fa5={2,"GPS2","bcd"};
+    faCoordenada fa1={0,"GPS0","ab"};
+    faCoordenada fa2={0,"GPS0","ab"};
+    faCoordenada fa3={0,"GPS0","ab"};
+    faCoordenada fa4={3,"GPS3","bcd"};
+    faCoordenada fa5={2,"GPS2","ac"};
     faCoordenada fa6={6,"GPS6","act"};
-    faCoordenada fa7={6,"GPS6","bcd"};
-    faCoordenada fa8={2,"GPS2","ab"};
-    faCoordenada fa9={7,"GPS7","bc"};
+    faCoordenada fa7={6,"GPS6","act"};
+    faCoordenada fa8={2,"GPS2","ac"};
+    faCoordenada fa9={7,"GPS7","aaabbct"};
     faCoordenada fa10={1,"GPS1","bc"};
     ofstream faArchivo;
-
-    system("color 04");
 
     faArchivo.open("Coordenadas.txt",ios::out);
 
@@ -136,20 +138,43 @@ faArchivo << "Error: Cap\t" << "Geo\t" << "Arsenal --> stoi" << endl
 faArchivo.close();
 }
 
+void faCargando()
+{ 
+    int fai =0;
+    string fac= "\\|/-|"; 
+    for(int fas=0; fas<= 100; fas++)
+    {   
+        if(fas % 4 ==0)
+            fai =0; 
+        cout    << "\r" << fac[fai++]   
+                << " " << fas << "%\t";
+        Sleep(10);
+    }
+}
+
 void faLectura(){
     fstream faArchivo;
     string faTexto;
     int i = 0;
     faArchivo.open("Coordenadas.txt",ios::in);
 
-    system("color 05");
-
+    
     if (faArchivo.is_open())
        while (!faArchivo.eof())
         {
             getline(faArchivo,faTexto);
+
+            if (faTexto[0]=='E')
+            {
+                faSetColor(0,4);
+                faCargando();
+                cout << faTexto << endl;
+            }else{
+            faSetColor(0,2);
+            faCargando();
             cout << faTexto << endl;
             Sleep(10);
+            }
         }
     else
      {
@@ -161,32 +186,37 @@ void faLectura(){
 }
 
 void faInformacion(){
+    faSetColor(0,8);
+
     cout << "[+] Informacion Arbol Binario de Capacidad Belica Ucrania" << endl
          << "Developer_Name: " << FANOMBRE << endl
          << "Developer_Cedula: " << FACEDULA << endl
          << "Capacidad Belica: " << FACAPACIDADBELICA << endl
          << "Coordenada_Total: " << FACOORDENADATOTAL << endl
-         << "Coordenada_SecCarga: ";
-
-
-
+         << "Coordenada_SecCarga: " << FAENORDEN;
 }
 
 int main(){
     faCoordenada fa[10]={{0,"GPS0","aaabbcd"},{0,"GPS0","acd"},{0,"GPS0","acd"},{3,"GPS3","bct"},{2,"GPS2","bcd"},{6,"GPS6","act"},{6,"GPS6","bcd"},{2,"GPS2","ab"},{7,"GPS7","bc"},{1,"GPS1","bc"}};
     ABB arbol = NULL;
-    string bomba = "TDA";
+    string bomba = "aaabbct";
     faEstado ultimo;
      
     for(int i=0; i<FACOORDENADATOTAL; i++)
     {
-        insertar( arbol, fa[10]);
+        insertar( arbol, fa->faCap);
     }
 
     faEscribir(); //funcion que manda las coordenadas a Coordenadas.txt
     faLectura(); //funcion que permite leer el archivo Coordenadas.txt
     faInformacion(); //funcion que imprime la informacion
-    enOrden(arbol);
+
+    ultimo= faArmamentoBomba(bomba);
+    if(ultimo==faEstado::ARMAMENTOCOMPLETO){
+        cout << "\n\nLa BOMB-IPI ha explotado exitosamente";
+    }else{
+        cout << "\n\nLa BOMB-IPI no coincide con el armamento";
+    }
 
     return 0;
 }
