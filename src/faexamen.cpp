@@ -85,19 +85,17 @@ faEstado faArmamentoBomba(string fapalabra){
                if (fapalabra[i]=='a')
                {
                     faActual=faEstado::Q1;
-               }
-               if (faActual==faEstado::Q1 && fapalabra[i]=='b')
-               {
-                    faActual=faEstado::Q2;
-               }
-               if (faActual==faEstado::Q2 && fapalabra[i]=='c' || faActual==faEstado::Q2)
-               {
-                    faActual=faEstado::Q3;
-               }
-               if(faActual==faEstado::Q3 && fapalabra[i]=='d' || faActual==faEstado::Q3){
-                    faActual=faEstado::ARMAMENTOCOMPLETO;
-               }else{
-                    faActual=faEstado::FAIL;
+                    if (faActual==faEstado::Q1 && fapalabra[i]=='b'){
+                        faActual=faEstado::Q2;
+                        if (faActual==faEstado::Q2 && fapalabra[i]=='c' || faActual==faEstado::Q2){
+                            faActual=faEstado::Q3;
+                            if(faActual==faEstado::Q3 && fapalabra[i]=='d' || faActual==faEstado::Q3){
+                                faActual=faEstado::ARMAMENTOCOMPLETO;
+                            }else{
+                                faActual=faEstado::FAIL;
+                            }
+                        }
+                    }
                }
           }
      }
@@ -212,9 +210,10 @@ int main(){
     faInformacion(); //funcion que imprime la informacion
 
     ultimo= faArmamentoBomba(bomba);
+    
     if(ultimo==faEstado::ARMAMENTOCOMPLETO){
         cout << "\n\nLa BOMB-IPI ha explotado exitosamente";
-    }else{
+    }else if(ultimo==faEstado::FAIL){
         cout << "\n\nLa BOMB-IPI no coincide con el armamento";
     }
 
